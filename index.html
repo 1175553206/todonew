@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="jquery-3.0.0/jquery-3.0.0.min.js"></script>
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            box-sizing: border-box;
+            font-family: '微软雅黑';
+        }
+        body{
+            background: #cdcdcd;
+        }
+        header{
+            width: 100%;
+            height: 50px;
+            background: #333;
+            margin-bottom: 20px;
+        }
+        .input{
+            width:550px;
+            height: 50px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input>input{
+            width: 400px;
+            height: 30px;
+            background: #fff;
+            border: 0;
+            border-radius: 10px;
+            padding: 0 20px;
+        }
+        span{
+            font-size: 18px;
+            line-height: 50px;
+            color: #fff;
+        }
+        main{
+            width: 550px;
+            height: auto;
+            padding: 0 20px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .doing{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bt{
+            line-height: 50px;
+            color: #000;
+            font-weight: 200; 
+            font-size: 24px;
+        }
+
+        .done{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+
+        }
+
+        /*.done>div{*/
+            /*font-size: 18px;*/
+            /*line-height: 50px;*/
+            /*color: #000;*/
+            /*font-weight: 200; */
+            /*font-size: 24px;*/
+        /*}*/
+        .zhshu,.yishu{
+            width: 26px;
+            height:26px;
+            background: #fff;
+            font-size: 12px;
+            text-align: center;
+            line-height: 26px;
+            color: #000;
+            border-radius: 50%;
+        }
+        .tiao{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .todo .true{
+            width: 100%;
+            height: 32px;
+            border-radius: 6px;
+            border-left: 5px solid #629A9C;
+            opacity: 1;
+            background: #fff;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .todo1 .true{
+            width: 100%;
+            height: 32px;
+            border-radius: 6px;
+            border-left: 5px solid #999;
+            opacity: 0.5;
+            background: #fff;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .true>input{
+            width: 22px;
+            height: 22px;
+            background: #dcdcdc;
+            border: 1px solid #666666;
+        }
+        .wen{
+            width: 75%;
+            height: 100%;
+            font-size: 14px;
+            line-height: 32px;
+            color: #333;
+        }
+        .true a{
+            width: 22px;
+            height: 22px;
+            background: #ccc;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            font-size: 20px;
+            text-align: center;
+            line-height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="input">
+        <span>ToDolist</span>
+        <input type="text" placeholder="添加ToDo" id="input"/>
+    </div>
+</header>
+<div class="box">
+    <main class="todo">
+        <div class="doing">
+            <div class="bt">正在进行</div>
+            <div class="zhshu">0</div>
+        </div>
+
+        <ul class="tiao">
+
+        </ul>
+    </main>
+    <main class="todo1">
+        <div class="done">
+            <div class="bt">已经完成</div>
+            <div class="yishu">0</div>
+        </div>
+        <ul class="tiao">
+
+        </ul>
+    </main>
+</div>
+
+
+</body>
+</html>
+
+<script>
+
+    nexttdid=7;
+    var todolist=[
+//              {id:1,content:'设计费',status:false},
+//             {id:2,content:'冲锋车',status:true},
+//             {id:3,content:'读后感部分',status:true},
+//             {id:4,content:'开关柜',status:false},
+//             {id:5,content:'蛋白粉吧',status:true},
+//              {id:6,content:'福布斯',status:false},
+//
+    ];
+   
+//
+    if(localStorage.data){
+         todolist=JSON.parse(localStorage.data) ;
+
+          localStorage.nextid=nexttdid;
+    }
+    console.log(todolist);
+
+
+    function render() {
+         localStorage.data=JSON.stringify(todolist);
+         localStorage.nextid=nexttdid;
+
+
+        let doing=[];
+        let done=[];
+        todolist.forEach(val=>{
+            if(val.status){
+                done.push(val);
+
+            }
+            else {
+                doing.push(val);
+            }
+        });
+
+        console.log(doing,done);
+        let str="";
+        doing.forEach(val=>{
+            str+=`
+        <li class="true" id="${val.id}">
+        <input type="checkbox" class="abb" checkbox/>
+        <p class="wen">${val.content}</p>
+        <a href="" class="del">-</a>
+    </li>
+        `;
+        }) ;
+
+        $(".todo").find('ul').html(str).end().find('.zhshu').html(doing.length);
+
+
+
+        let atr="";
+        done.forEach(val=>{
+            atr+=`
+        <li class="true" id="${val.id}">
+        <input type="checkbox" class="abb" checked/>
+        <p class="wen">${val.content}</p>
+        <a href="" class="del">-</a>
+    </li>
+        `;
+        })
+        $(".todo1").find('ul').html(atr).end().find('.yishu').html(done.length);
+    }
+
+    render();
+
+
+
+    //    转化
+    $(".box").on('click','.del',function (e) {
+        e.preventDefault();
+        let id=$(this).closest('li').attr('id');
+        let index=todolist.findIndex(val=>val.id==id);
+        console.log(id,index);
+        todolist.splice(index,1);
+        render();
+
+
+
+    }).on("click","p",function () {
+        let id=$(this).closest('li').attr('id');
+        let index=todolist.findIndex(val=>val.id==id);
+        let input=$('<input>').val($(this).text());
+        $(this).html('').append(input);
+        input.focus();
+        input.blur(function () {
+            
+            todolist[index].content=$(this).val();
+            render();
+
+
+        })
+
+
+
+    }).on("click",'.abb',function () {
+
+        let id=$(this).closest('li').attr('id');
+        let index=todolist.findIndex(val=>val.id==id);
+        todolist[index].status=!todolist[index].status;
+        render();
+
+
+
+    });
+
+
+    let input1=$("#input");
+
+    input1.on('keyup',function (e) {
+        if(e.which===13){
+            if($(this).val()){
+                todolist.unshift({id:nexttdid,content:$(this).val(),status:false});
+                nexttdid++;
+                render();
+
+
+                let input2=$("#input").val($(this).text());
+                 input2.focus();
+            }
+            else{
+                alert('内容不能为空，请添加内容！')
+            }
+        }
+
+    })
+
+
+
+
+
+
+
+
+
+
+</script>
